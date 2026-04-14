@@ -58,6 +58,7 @@ export function getTranslations(language: Language) {
             index: {
                 appTitle: "Moonlight 网页版",
                 back: "返回",
+                home: "返回主页",
                 reload: "刷新",
                 addHostUnreachable: (address: string) => `主机 "${address}" 无法访问`,
                 saveSettingsFailed: "无法保存设置",
@@ -251,6 +252,7 @@ export function getTranslations(language: Language) {
         index: {
             appTitle: "Moonlight Web",
             back: "Back",
+            home: "Home",
             reload: "Reload",
             addHostUnreachable: (address: string) => `Host "${address}" is not reachable`,
             saveSettingsFailed: "Couldn't save settings",

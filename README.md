@@ -576,3 +576,23 @@ If you're compiling in:
 ### Crate: Moonlight Web Streamer
 This is the streamer subprocess of the [web server](#crate-moonlight-web-server) and found at `streamer/`.
 It'll communicate via stdin and stdout with the web server to negotiate the WebRTC peers and then continue to communicate via the peer.
+
+### Additional Build Dependencies (Windows)
+When compiling on Windows, make sure the following dependencies are installed:
+
+1. [Perl](https://strawberryperl.com/) (required by some native build scripts)
+2. Clang runtime containing `libclang.dll` (required by crates using `bindgen`)
+
+After installing Clang, set the `LIBCLANG_PATH` environment variable to the directory that contains `libclang.dll`.
+
+PowerShell example:
+```powershell
+$env:LIBCLANG_PATH = "C:\Program Files\LLVM\bin"
+```
+
+Persist for the current user:
+```powershell
+[Environment]::SetEnvironmentVariable("LIBCLANG_PATH", "C:\Program Files\LLVM\bin", "User")
+```
+
+If `libclang.dll` is not in the expected directory, search your LLVM installation and point `LIBCLANG_PATH` to the folder where that file exists.

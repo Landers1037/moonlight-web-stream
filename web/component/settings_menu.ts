@@ -204,6 +204,7 @@ export class StreamSettingsComponent implements Component {
 
         // Root div
         this.divElement.classList.add("settings")
+        this.divElement.classList.add("p-4", "md:p-8") // Add padding to the settings container
 
         // Sidebar
         this.sidebarHeader.innerText = i.sidebar

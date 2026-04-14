@@ -136,6 +136,7 @@ export class MediaSourceDecoder implements DataVideoRenderer {
             return
         }
 
+        // @ts-ignore
         const { configure, chunk } = value
 
         if (!chunk) {

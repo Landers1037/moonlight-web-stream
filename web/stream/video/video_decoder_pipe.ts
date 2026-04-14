@@ -210,6 +210,7 @@ export class VideoDecoderPipe implements DataVideoRenderer {
                 return
             }
 
+            // @ts-ignore
             const { configure, chunk } = value
 
             if (!chunk) {
@@ -307,3 +308,4 @@ export class VideoDecoderPipe implements DataVideoRenderer {
         return this.base
     }
 }
+

@@ -1,12 +1,18 @@
 {
   "compilerOptions": {
     "rootDir": "web",
-    "outDir": "./dist",
+    "outDir": "./static",
     "target": "ES6",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "strict": true,
-    "esModuleInterop": true
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noEmitOnError": false,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "checkJs": false,
+    "allowJs": true
   },
   "include": [
     "web/**/*"

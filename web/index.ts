@@ -94,6 +94,7 @@ class MainApp implements Component {
     private actionElement = document.createElement("div")
 
     private backButton: HTMLButtonElement = document.createElement("button")
+    private homeButton: HTMLButtonElement = document.createElement("button")
 
     private hostAddButton: HTMLButtonElement = document.createElement("button")
     private settingsButton: HTMLButtonElement = document.createElement("button")
@@ -146,6 +147,13 @@ class MainApp implements Component {
         this.backButton.classList.add("button-fit-content")
         this.backButton.addEventListener("click", backAppState)
 
+        // Home button
+        this.homeButton.title = I.index.home
+        this.homeButton.classList.add("home-button")
+        this.homeButton.addEventListener("click", () => {
+            this.setCurrentDisplay("hosts")
+        })
+
         // Host add button
         this.hostAddButton.classList.add("host-add")
         this.hostAddButton.addEventListener("click", this.addHost.bind(this))
@@ -158,8 +166,8 @@ class MainApp implements Component {
         this.settingsButton.classList.add("open-settings")
         this.settingsButton.addEventListener("click", () => this.setCurrentDisplay("settings"))
 
-        this.saveRoleDefaultsButton.innerText = I.settings.saveRoleDefaults
-        this.saveRoleDefaultsButton.classList.add("button-fit-content")
+        this.saveRoleDefaultsButton.title = I.settings.saveRoleDefaults
+        this.saveRoleDefaultsButton.classList.add("save-role-defaults-button")
         this.saveRoleDefaultsButton.addEventListener("click", this.onSaveRoleDefaults.bind(this))
 
         // Settings
@@ -330,11 +338,13 @@ class MainApp implements Component {
             this.hostList.unmount(this.divElement)
         } else if (this.currentDisplay == "games") {
             this.actionElement.removeChild(this.backButton)
+            this.actionElement.removeChild(this.homeButton)
             this.actionElement.removeChild(this.settingsButton)
 
             this.gameList?.unmount(this.divElement)
         } else if (this.currentDisplay == "settings") {
             this.actionElement.removeChild(this.backButton)
+            this.actionElement.removeChild(this.homeButton)
             if (this.actionElement.contains(this.saveRoleDefaultsButton)) {
                 this.actionElement.removeChild(this.saveRoleDefaultsButton)
             }
@@ -352,6 +362,7 @@ class MainApp implements Component {
             setAppState({ display: "hosts" }, pushIntoHistory)
         } else if (display == "games" && extraInfo?.hostId != null) {
             this.actionElement.appendChild(this.backButton)
+            this.actionElement.appendChild(this.homeButton)
             this.actionElement.appendChild(this.settingsButton)
 
             if (this.gameList?.getHostId() != extraInfo?.hostId) {
@@ -366,6 +377,7 @@ class MainApp implements Component {
             setAppState({ display: "games", hostId: this.gameList?.getHostId() }, pushIntoHistory)
         } else if (display == "settings") {
             this.actionElement.appendChild(this.backButton)
+            this.actionElement.appendChild(this.homeButton)
             if (this.user?.role == "Admin") {
                 this.actionElement.appendChild(this.saveRoleDefaultsButton)
             }
