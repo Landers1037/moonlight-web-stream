@@ -10,12 +10,12 @@
     --ml-topbar-padding-x: 24px;
     --ml-topbar-bg: rgba(15, 15, 35, 0.8);
     --ml-topbar-icon-size: 24px;
-    --ml-topbar-icon-button: 40px;
+    --ml-topbar-icon-button: 48px;
     --ml-topbar-actions-offset: 88px;
   }
 
   body {
-    @apply bg-background text-foreground font-sans min-h-screen selection:bg-secondary selection:text-white antialiased transition-colors duration-300;
+    @apply bg-background text-foreground font-sans min-h-screen selection:bg-secondary selection:text-on-primary antialiased transition-colors duration-300;
   }
 
   body:not(.stream) {
@@ -24,7 +24,7 @@
 
   body::before {
     content: "";
-    @apply fixed inset-0 -z-10 bg-gradient-to-br from-background via-[#161435] to-[#0A0A18] pointer-events-none;
+    @apply fixed inset-0 -z-10 bg-body-gradient from-body-from via-body-via to-body-to pointer-events-none;
   }
 
   html.stream, body.stream {
@@ -36,7 +36,7 @@
   }
 
   h2, h3 {
-    @apply mt-6 mb-4 text-2xl drop-shadow-md text-white;
+    @apply mt-6 mb-4 text-2xl drop-shadow-md text-foreground;
   }
 
   a, label, input, select, textarea, button, .textlike, .select-polyfill-display {
@@ -76,7 +76,7 @@
   }
 
   .file-label, label {
-    @apply cursor-default mr-3 font-medium text-gray-300 min-w-[100px];
+    @apply cursor-default mr-3 font-medium text-foreground/70 min-w-[100px];
   }
 
   .textlike, textarea, select, .select-polyfill-display, input[type=text], input[type=password], input[type=number] {
@@ -92,7 +92,7 @@
   }
 
   textarea:disabled, select:disabled, .select-polyfill-display:disabled, input[type=text]:disabled, input[type=password]:disabled, input[type=number]:disabled {
-    @apply text-gray-500 bg-black/20 border-border/20 cursor-not-allowed;
+    @apply text-foreground/50 bg-foreground/10 border-border/20 cursor-not-allowed;
   }
 
   /* Hide number arrows */
@@ -119,7 +119,7 @@
 
   input[type="checkbox"]::after {
     content: "✓";
-    @apply text-white text-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-0 opacity-0 transition-all duration-200 font-bold;
+    @apply text-on-primary text-lg absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-0 opacity-0 transition-all duration-200 font-bold;
   }
 
   input[type="checkbox"]:checked::after {
@@ -127,7 +127,7 @@
   }
 
   input[type="checkbox"]:disabled {
-    @apply border-gray-600 bg-gray-800/30 cursor-not-allowed opacity-50;
+    @apply border-foreground/30 bg-foreground/10 cursor-not-allowed opacity-50;
   }
 
   /* Slider */
@@ -144,12 +144,48 @@
   }
 
   /* Modals */
-  .modal-background, .context-menu-background {
-    @apply fixed z-[5000] inset-0 w-screen h-screen bg-black/60 backdrop-blur-sm transition-all duration-200 ease-out visible opacity-100;
+  .modal-background {
+    @apply fixed z-[5000] inset-0 w-screen h-screen bg-black/60 backdrop-blur-sm transition-all duration-200 ease-out visible opacity-100 overflow-y-auto;
   }
 
   .modal-content {
-    @apply relative z-[5001] bg-background/95 border border-border rounded-2xl shadow-2xl my-[10%] mx-auto p-8 w-11/12 max-w-lg max-h-[75vh] overflow-y-auto backdrop-blur-xl;
+    @apply relative z-[5001] bg-background/95 border border-border rounded-2xl shadow-2xl my-10 mx-auto p-8 w-11/12 max-w-lg backdrop-blur-xl flex flex-col gap-6;
+  }
+
+  .modal-content h3 {
+    @apply text-3xl font-bold mb-2 text-center bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent mt-0;
+  }
+
+  .modal-content form {
+    @apply flex flex-col gap-4;
+  }
+
+  .modal-content .input-div {
+    @apply flex flex-col items-start gap-1.5 my-1;
+  }
+
+  .modal-content .input-div label:not(.file-button) {
+    @apply text-sm font-medium text-foreground/70 w-full text-left;
+  }
+
+  .modal-content .textlike, .modal-content input[type=text], .modal-content input[type=password], .modal-content input[type=number] {
+    @apply w-full max-w-none text-base bg-muted/30 border-border/40 px-4 py-3 rounded-xl focus:bg-muted/50 transition-all;
+  }
+
+  .modal-actions {
+    @apply flex flex-row gap-3 mt-6 pt-4 border-t border-border/30;
+  }
+
+  .modal-actions button {
+    @apply flex-1 m-0;
+  }
+
+  .modal-actions button[type="button"] {
+    @apply bg-muted/40 border-transparent text-foreground/70 hover:bg-muted/70 hover:text-foreground shadow-none hover:-translate-y-0;
+  }
+
+  .modal-actions button[type="submit"] {
+    @apply bg-primary hover:bg-secondary border-transparent;
   }
 
   .modal-disabled, .context-menu-disabled {
@@ -158,7 +194,7 @@
 
   /* Context Menu */
   .context-menu-background {
-    @apply z-[6000] bg-background/90 border border-border shadow-2xl rounded-xl backdrop-blur-xl scale-100 translate-x-0 translate-y-0;
+    @apply fixed z-[6000] w-max h-max bg-background/90 border border-border shadow-2xl rounded-xl backdrop-blur-xl scale-100 translate-x-0 translate-y-0 transition-all duration-200 ease-out visible opacity-100;
   }
 
   .context-menu-list {
@@ -170,11 +206,11 @@
   }
 
   .context-menu-element:hover {
-    @apply bg-secondary/40 text-white;
+    @apply bg-secondary/40 text-foreground;
   }
 
   .context-menu-element-red {
-    @apply text-red-400;
+    @apply text-destructive;
   }
 
   .context-menu-element-red:hover {
@@ -209,16 +245,22 @@
   }
 
   .sidebar-button {
-    @apply w-10 h-10 flex items-center justify-center bg-primary/80 border border-border rounded-full shadow-glow cursor-pointer hover:bg-secondary hover:scale-105 transition-all p-0 m-1;
+    @apply w-10 h-10 flex items-center justify-center bg-primary/30 border-none rounded-full shadow-none cursor-pointer hover:bg-foreground/10 hover:scale-105 transition-all p-0 m-1 backdrop-blur-md text-foreground;
+    touch-action: none;
   }
 
   .sidebar-button-image {
-    @apply w-5 h-5 transition-transform duration-300;
+    @apply w-6 h-6 transition-transform duration-300;
   }
 
-  .sidebar-edge-left .sidebar-button-image { @apply rotate-180; }
+  html[data-theme="light"] .sidebar-button {
+    @apply bg-black/60;
+  }
+
+  /* When moonlight.svg is used, no need to rotate based on edge */
+  .sidebar-edge-left .sidebar-button-image { @apply rotate-0; }
   .sidebar-edge-right .sidebar-button-image { @apply rotate-0; }
-  .sidebar-show .sidebar-button-image { @apply rotate-180; }
+  .sidebar-show .sidebar-button-image { @apply scale-110; }
 
   .sidebar-content {
     @apply bg-background/95 border border-border shadow-2xl rounded-2xl p-4 flex flex-col backdrop-blur-xl min-w-[280px];
@@ -226,11 +268,11 @@
 
   /* Top Line (Navigation) */
   .top-line {
-    @apply flex flex-row justify-center items-center text-white fixed top-0 left-0 right-0 h-[var(--ml-topbar-height)] z-[1000] px-[var(--ml-topbar-padding-x)] bg-background/80 backdrop-blur-xl border-b border-border shadow-lg;
+    @apply flex flex-row justify-center items-center text-foreground fixed top-0 left-0 right-0 h-[var(--ml-topbar-height)] z-[1000] px-[var(--ml-topbar-padding-x)] bg-background/80 backdrop-blur-xl border-b border-border shadow-lg;
   }
 
   .top-line > h1 {
-    @apply m-0 text-xl font-bold leading-none whitespace-nowrap tracking-wide bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent;
+    @apply m-0 text-xl font-bold leading-none whitespace-nowrap tracking-wide bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent;
   }
 
   .top-line-actions, .actions-list {
@@ -251,6 +293,19 @@
     background-size: var(--ml-topbar-icon-size);
     background-position: center;
     background-repeat: no-repeat;
+    /* Invert colors for light theme */
+    @apply dark:invert-0;
+  }
+  
+  html[data-theme="light"] .logout-button, 
+  html[data-theme="light"] .login-button, 
+  html[data-theme="light"] .admin-button, 
+  html[data-theme="light"] .open-settings, 
+  html[data-theme="light"] .host-add, 
+  html[data-theme="light"] .user-button, 
+  html[data-theme="light"] .home-button, 
+  html[data-theme="light"] .save-role-defaults-button {
+    background-color: #c5c5c5;
   }
 
   .logout-button { background-image: url("../resources/new/logout-svgrepo-com.svg"); }
@@ -263,7 +318,7 @@
   .save-role-defaults-button { background-image: url("../resources/baseline-check_circle_outline-24px.svg"); }
 
   .actions-list .button-fit-content {
-    @apply fixed left-[var(--ml-topbar-padding-x)] top-0 w-[var(--ml-topbar-icon-button)] h-[var(--ml-topbar-height)] bg-transparent border-none shadow-none text-transparent overflow-hidden cursor-pointer hover:bg-secondary/20 transition-colors rounded-lg flex items-center justify-center;
+    @apply fixed left-[var(--ml-topbar-padding-x)] top-1/2 w-[var(--ml-topbar-icon-button)] h-[var(--ml-topbar-height)] bg-transparent border border-border/70 shadow-none text-transparent overflow-hidden cursor-pointer hover:bg-secondary/20 hover:border-accent/70 transition-colors rounded-full flex items-center justify-center;
     background-image: url("../resources/arrow_left.svg");
     background-repeat: no-repeat;
     background-position: center;
@@ -293,7 +348,7 @@
   }
 
   .host-name {
-    @apply m-0 text-white text-lg font-semibold text-center tracking-wide;
+    @apply m-0 text-foreground text-lg font-semibold text-center tracking-wide;
   }
 
   .app-image {
@@ -330,7 +385,7 @@
   }
 
   .video-stats {
-    @apply cursor-default pointer-events-none text-accent relative z-[1] font-mono text-sm bg-black/60 px-2 py-1 rounded backdrop-blur-md;
+    @apply cursor-default pointer-events-none text-accent relative z-[1] font-mono text-sm bg-foreground/60 text-background px-2 py-1 rounded backdrop-blur-md;
   }
 
   .local-touch-cursor {
@@ -394,11 +449,11 @@
   .select-polyfill-list.top { @apply bottom-full top-auto mb-1 mt-0; }
 
   .select-polyfill-list p {
-    @apply text-gray-200 py-2.5 px-4 m-0 text-sm transition-colors;
+    @apply text-foreground/80 py-2.5 px-4 m-0 text-sm transition-colors;
   }
 
   .select-polyfill-list p:hover {
-    @apply bg-secondary text-white;
+    @apply bg-secondary text-on-primary;
   }
 
   /* Admin Panels */

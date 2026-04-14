@@ -17,7 +17,7 @@
   "scripts": {
     "dev": "npm run generate-bindings && npm-watch build-light",
     "build": "npm run generate-bindings && npm run build-light",
-    "build-css": "npx tailwindcss -i ./web/styles/tailwind-input.css -o ./web/styles/standard.css && npx tailwindcss -i ./web/styles/tailwind-input.css -o ./web/styles/moonlight.css",
+    "build-css": "npx tailwindcss -i ./web/styles/tailwind-input.css -o ./web/styles/standard.css && npx tailwindcss -c ./tailwind.moonlight.config.js -i ./web/styles/tailwind-input.css -o ./web/styles/moonlight.css && npx tailwindcss -c ./tailwind.light.config.js -i ./web/styles/tailwind-input.css -o ./web/styles/light.css",
     "build-light": "npm run build-css && tsc && npm run copy-static",
     "generate-bindings": "cargo test export_bindings --package common",
     "copy-static": "cpx \"web/**/*.{html,json,css,svg,png,js,wasm}\" static/"
@@ -27,6 +27,7 @@
   "devDependencies": {
     "autoprefixer": "^10.5.0",
     "cpx": "1.2.1",
+    "node-forge": "^1.4.0",
     "npm-watch": "0.13.0",
     "postcss": "^8.5.9",
     "tailwindcss": "^3.4.19",

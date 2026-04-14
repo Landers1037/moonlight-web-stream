@@ -6,6 +6,7 @@ export abstract class FormModal<Output> implements Component, Modal<Output | nul
 
     private formElement: HTMLFormElement = document.createElement("form")
     private mounted: boolean = false
+    private actionsContainer: HTMLDivElement = document.createElement("div")
     private submitButton: HTMLButtonElement = document.createElement("button")
     private cancelButton: HTMLButtonElement = document.createElement("button")
 
@@ -14,7 +15,10 @@ export abstract class FormModal<Output> implements Component, Modal<Output | nul
         this.submitButton.type = "submit"
         this.submitButton.innerText = i.ok
 
+        this.cancelButton.type = "button"
         this.cancelButton.innerText = i.cancel
+        
+        this.actionsContainer.classList.add("modal-actions")
 
         this.formElement.addEventListener("submit", (event) => event.preventDefault())
     }
@@ -27,8 +31,11 @@ export abstract class FormModal<Output> implements Component, Modal<Output | nul
     mount(parent: Element): void {
         if (!this.mounted) {
             this.mountForm(this.formElement)
-            this.formElement.appendChild(this.submitButton)
-            this.formElement.appendChild(this.cancelButton)
+            
+            this.actionsContainer.appendChild(this.cancelButton)
+            this.actionsContainer.appendChild(this.submitButton)
+            this.formElement.appendChild(this.actionsContainer)
+            this.mounted = true
         }
 
         this.reset()

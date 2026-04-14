@@ -293,6 +293,7 @@ export class Host implements Component {
             this.imageOverlayElement.src = HOST_OVERLAY_LOCK
         } else {
             this.imageOverlayElement.src = HOST_OVERLAY_NONE
+            this.imageOverlayElement.style.display = "none"
         }
     }
 

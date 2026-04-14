@@ -1,7 +1,7 @@
 import { globalDefaultSettings, getLocalStreamSettings } from "../component/settings_menu.js"
 
 // old doesn't exist anymore and is always replaced with moonlight when loading the settings
-export type PageStyle = "standard" | "old" | "moonlight"
+export type PageStyle = "standard" | "old" | "moonlight" | "light"
 
 let currentStyle: PageStyle | null = null
 const styleLink = document.getElementById("style") as HTMLLinkElement
@@ -21,6 +21,9 @@ export function setStyle(style: PageStyle) {
     if (styleLink.href !== absolute) {
         styleLink.href = absolute
     }
+
+    // Set data-theme attribute on html element to allow css to react to it
+    document.documentElement.setAttribute('data-theme', style)
 
     currentStyle = style
 }

@@ -7,31 +7,31 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: '#0F0F23',
-        foreground: '#F8FAFC',
-        primary: '#1E1B4B',
+        background: '#121212',
+        foreground: '#E0E0E0',
+        primary: '#1E1E1E',
         'on-primary': '#FFFFFF',
-        secondary: '#4338CA',
-        accent: '#22C55E',
-        muted: '#27273B',
-        border: '#312E81',
+        secondary: '#333333',
+        accent: '#555555',
+        muted: '#2C2C2C',
+        border: '#444444',
         destructive: '#EF4444',
-        ring: '#1E1B4B',
+        ring: '#555555',
       },
       backgroundImage: {
         'body-gradient': 'linear-gradient(to bottom right, var(--tw-gradient-stops))',
       },
       gradientColorStops: {
-        'body-from': '#0F0F23',
-        'body-via': '#161435',
-        'body-to': '#0A0A18',
+        'body-from': '#121212',
+        'body-via': '#1A1A1A',
+        'body-to': '#050505',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
       },
       boxShadow: {
-        glow: '0 0 10px rgba(67, 56, 202, 0.4)',
-        'glow-accent': '0 0 15px rgba(34, 197, 94, 0.4)',
+        glow: '0 0 10px rgba(85, 85, 85, 0.4)',
+        'glow-accent': '0 0 15px rgba(85, 85, 85, 0.4)',
         'glow-destructive': '0 0 15px rgba(239, 68, 68, 0.4)',
       }
     },

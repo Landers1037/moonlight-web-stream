@@ -10,6 +10,8 @@ export type UserAuth = {
 
 export class ApiUserPasswordPrompt extends FormModal<UserAuth> {
 
+    private titleContainer: HTMLElement = document.createElement("div")
+    private appTitle: HTMLElement = document.createElement("h2")
     private text: HTMLElement = document.createElement("h3")
 
     private name: InputComponent
@@ -20,7 +22,22 @@ export class ApiUserPasswordPrompt extends FormModal<UserAuth> {
         super()
         const i = getTranslations(getCurrentLanguage()).modal
 
+        this.appTitle.innerText = "Moonlight"
+        this.appTitle.style.textAlign = "center"
+        this.appTitle.style.margin = "0 0 8px 0"
+        this.appTitle.style.fontSize = "2rem"
+        this.appTitle.style.fontWeight = "800"
+        
         this.text.innerText = i.login
+        this.text.style.fontSize = "1.25rem"
+        this.text.style.color = "rgba(255,255,255,0.7)"
+
+        this.titleContainer.style.display = "flex"
+        this.titleContainer.style.flexDirection = "column"
+        this.titleContainer.style.alignItems = "center"
+        this.titleContainer.style.marginBottom = "24px"
+        this.titleContainer.appendChild(this.appTitle)
+        this.titleContainer.appendChild(this.text)
 
         this.name = new InputComponent("ml-api-name", "text", i.username, {
             formRequired: true
@@ -86,7 +103,7 @@ export class ApiUserPasswordPrompt extends FormModal<UserAuth> {
     }
 
     mountForm(form: HTMLFormElement): void {
-        form.appendChild(this.text)
+        form.appendChild(this.titleContainer)
 
         this.name.mount(form)
 
