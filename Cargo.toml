@@ -54,6 +54,7 @@ webrtc = "0.17.1"
 actix-web = { version = "4.11.0" }
 actix-files = "0.6.6"
 actix-ws = "0.3.0"
+actix-cors = "0.7.0"
 
 # OpenSSL / Crypto
 openssl = "0.10.67"
@@ -97,6 +98,7 @@ actix-web = { workspace = true, features = ["openssl"] }
 openssl = { workspace = true }
 actix-files = { workspace = true }
 actix-ws = { workspace = true }
+actix-cors = { workspace = true }
 
 log = { workspace = true }
 tracing = { workspace = true }

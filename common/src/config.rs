@@ -245,6 +245,8 @@ pub struct WebServerConfig {
     pub bind_address: SocketAddr,
     pub certificate: Option<ConfigSsl>,
     #[serde(default)]
+    pub cors: CorsConfig,
+    #[serde(default)]
     pub url_path_prefix: String,
     #[serde(default = "default_session_cookie_secure")]
     pub session_cookie_secure: bool,
@@ -268,6 +270,7 @@ impl Default for WebServerConfig {
         Self {
             bind_address: default_bind_address(),
             certificate: None,
+            cors: Default::default(),
             url_path_prefix: "".to_string(),
             session_cookie_secure: default_session_cookie_secure(),
             session_cookie_expiration: default_session_cookie_expiration(),
@@ -297,6 +300,29 @@ pub struct ForwardedHeaders {
     pub username_header: String,
     #[serde(default = "default_forwarded_headers_auto_create_user")]
     pub auto_create_missing_user: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CorsConfig {
+    /// 启用 CORS
+    #[serde(default)]
+    pub enable: bool,
+    /// 允许的方法
+    #[serde(default)]
+    pub allowed_methods: Vec<String>,
+    /// 允许的域名
+    #[serde(default)]
+    pub allowed_origins: Vec<String>,
+}
+
+impl Default for CorsConfig {
+    fn default() -> Self {
+        Self {
+            enable: false,
+            allowed_methods: vec![],
+            allowed_origins: vec![],
+        }
+    }
 }
 
 impl Default for ForwardedHeaders {
