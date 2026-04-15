@@ -99,6 +99,9 @@ export function getLocalStreamSettings(defaultSettings: Settings) {
     if (settings?.pageStyle === "old") {
         settings.pageStyle = "moonlight"
     }
+    if (settings?.bitrate && settings.bitrate > 200) {
+        settings.bitrate = Math.max(1, Math.round(settings.bitrate / 1000))
+    }
 
     return settings
 }
@@ -109,8 +112,8 @@ export function setLocalStreamSettings(settings?: Settings) {
 export type StreamSettingsChangeListener = (event: ComponentEvent<StreamSettingsComponent>) => void
 
 function makeSettingsValid(permissions: StreamPermissions, settings: Settings) {
-    if (permissions.maximum_bitrate_kbps != null && permissions.maximum_bitrate_kbps < settings.bitrate) {
-        settings.bitrate = permissions.maximum_bitrate_kbps
+    if (permissions.maximum_bitrate_kbps != null && permissions.maximum_bitrate_kbps < settings.bitrate * 1000) {
+        settings.bitrate = Math.max(1, Math.floor(permissions.maximum_bitrate_kbps / 1000))
     }
 
     if (!permissions.allow_codec_av1 && settings.videoCodec == "av1") {
@@ -230,10 +233,10 @@ export class StreamSettingsComponent implements Component {
         this.bitrate = new InputComponent("bitrate", "number", i.bitrate, {
             defaultValue: defaultSettings_.bitrate.toString(),
             value: settings?.bitrate?.toString(),
-            step: "100",
+            step: "1",
             numberSlider: {
-                range_min: Math.min(this.permissions.maximum_bitrate_kbps ?? 1000, 1000),
-                range_max: this.permissions.maximum_bitrate_kbps ?? 10000,
+                range_min: 1,
+                range_max: this.permissions.maximum_bitrate_kbps ? Math.max(1, Math.floor(this.permissions.maximum_bitrate_kbps / 1000)) : 200,
             }
         })
         this.bitrate.addChangeListener(this.onSettingsChange.bind(this))

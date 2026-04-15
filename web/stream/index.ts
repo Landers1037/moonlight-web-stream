@@ -718,7 +718,7 @@ export class Stream implements Component {
     }
     private async startStream(videoCodecSupport: VideoCodecSupport): Promise<void> {
         const settings: StreamSettings = {
-            bitrate_kbps: this.settings.bitrate,
+            bitrate_kbps: this.settings.bitrate * 1000,
             fps: this.settings.fps,
             width: this.streamerSize[0],
             height: this.streamerSize[1],

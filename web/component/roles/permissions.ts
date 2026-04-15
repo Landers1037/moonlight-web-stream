@@ -43,11 +43,11 @@ export class RolePermissionsMenu implements Component {
         // Maximum Bitrate
         this.maximumBitrateKbps = new InputComponent("maximumBitrateKbps", "number", i.maximumBitrate, {
             hasEnableCheckbox: true,
-            defaultValue: `${permissions.maximum_bitrate_kbps ?? 10000}`,
-            step: "100",
+            defaultValue: permissions.maximum_bitrate_kbps ? `${Math.floor(permissions.maximum_bitrate_kbps / 1000)}` : "50",
+            step: "1",
             numberSlider: {
-                range_min: 1000,
-                range_max: 10000,
+                range_min: 1,
+                range_max: 200,
             }
         })
         this.maximumBitrateKbps.setEnabled(permissions.maximum_bitrate_kbps != null)
@@ -108,7 +108,7 @@ export class RolePermissionsMenu implements Component {
     getPermissions(): StreamPermissions {
         return {
             allow_add_hosts: this.allowAddHosts.isChecked(),
-            maximum_bitrate_kbps: this.maximumBitrateKbps.isEnabled() ? parseInt(this.maximumBitrateKbps.getValue()) : null,
+            maximum_bitrate_kbps: this.maximumBitrateKbps.isEnabled() ? parseInt(this.maximumBitrateKbps.getValue()) * 1000 : null,
             allow_codec_h264: this.allowCodecH264.isChecked(),
             allow_codec_h265: this.allowCodecH265.isChecked(),
             allow_codec_av1: this.allowCodecAv1.isChecked(),
