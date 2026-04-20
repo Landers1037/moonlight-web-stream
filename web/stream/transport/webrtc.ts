@@ -381,8 +381,31 @@ export class WebRTCTransport implements Transport {
     async getStats(): Promise<Record<string, StatValue>> {
         const statsData: Record<string, StatValue> = {}
 
-        if (!this.videoReceiver) {
+        if (!this.peer) {
             return {}
+        }
+        
+        const peerStats = await this.peer.getStats()
+        for (const [key, value] of peerStats.entries()) {
+            if (value.type === "local-candidate") {
+                const isSelected = peerStats.get(value.transportId)?.selectedCandidatePairId === value.id || peerStats.get(value.id)?.selected;
+                if (isSelected || value.selected) {
+                    statsData.webrtcLocalProtocol = value.protocol || value.networkType
+                }
+            } else if (value.type === "candidate-pair" && value.state === "succeeded") {
+                const local = peerStats.get(value.localCandidateId)
+                const remote = peerStats.get(value.remoteCandidateId)
+                if (local && local.protocol) {
+                    statsData.webrtcLocalProtocol = local.protocol
+                }
+                if (remote && remote.protocol) {
+                    statsData.webrtcRemoteProtocol = remote.protocol
+                }
+            }
+        }
+
+        if (!this.videoReceiver) {
+            return statsData
         }
         const stats = await this.videoReceiver.getStats()
 

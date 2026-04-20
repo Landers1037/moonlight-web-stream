@@ -3,6 +3,7 @@ import { Pipe, PipeInfo } from "../pipeline/index.js";
 import { addPipePassthrough } from "../pipeline/pipes.js";
 import { emptyVideoCodecs, maybeVideoCodecs, VideoCodecSupport } from "../video.js";
 import { getStreamRectCorrected, TrackVideoRenderer, UrlVideoRenderer, VideoRenderer, VideoRendererSetup } from "./index.js";
+import { getLocalStreamSettings, globalDefaultSettings } from "../../component/settings_menu.js";
 
 const VIDEO_DECODER_CODECS: Record<keyof VideoCodecSupport, string> = {
     "H264": "avc1.42E01E",
@@ -128,6 +129,12 @@ export class VideoElementRenderer implements TrackVideoRenderer, VideoRenderer {
         }
     }
     getStreamRect(): DOMRect {
+        const offsetMode = getLocalStreamSettings(globalDefaultSettings()).coordinateOffset;
+
+        if (offsetMode === "video" && this.videoElement.videoWidth && this.videoElement.videoHeight) {
+            return getStreamRectCorrected(this.videoElement.getBoundingClientRect(), [this.videoElement.videoWidth, this.videoElement.videoHeight])
+        }
+
         if (!this.size) {
             return new DOMRect()
         }
@@ -220,6 +227,12 @@ export class UrlVideoElementRenderer implements UrlVideoRenderer, VideoRenderer 
         }
     }
     getStreamRect(): DOMRect {
+        const offsetMode = getLocalStreamSettings(globalDefaultSettings()).coordinateOffset;
+
+        if (offsetMode === "video" && this.videoElement.videoWidth && this.videoElement.videoHeight) {
+            return getStreamRectCorrected(this.videoElement.getBoundingClientRect(), [this.videoElement.videoWidth, this.videoElement.videoHeight])
+        }
+
         if (!this.size) {
             return new DOMRect()
         }

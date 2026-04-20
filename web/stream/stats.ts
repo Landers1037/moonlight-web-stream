@@ -7,6 +7,8 @@ import { DataTransportChannel, Transport } from "./transport/index.js"
 export type StatValue = string | number
 
 export type StreamStatsData = {
+    protocol: string | null
+    underlyingProtocol: string | null
     videoCodec: string | null
     videoWidth: number | null
     videoHeight: number | null
@@ -38,6 +40,7 @@ function num(value: number | null | undefined, suffix?: string): string | null {
 
 export function streamStatsToText(statsData: StreamStatsData): string {
     let text = `stats:
+protocol: ${statsData.protocol} (${statsData.underlyingProtocol ?? "tcp"})
 video information: ${statsData.videoCodec}, ${statsData.videoWidth}x${statsData.videoHeight}, ${statsData.videoFps} fps
 HDR: ${statsData.hdrEnabled === true ? "Enabled" : statsData.hdrEnabled === false ? "Disabled" : "Unknown"}
 video pipeline: ${statsData.videoPipeline}
@@ -95,6 +98,8 @@ export class StreamStats {
     private videoPipe: Pipe | null = null
     private audioPipe: Pipe | null = null
     private statsData: StreamStatsData = {
+        protocol: null,
+        underlyingProtocol: null,
         videoCodec: null,
         videoWidth: null,
         videoHeight: null,
@@ -215,11 +220,21 @@ export class StreamStats {
             return
         }
 
+        this.statsData.protocol = this.transport.implementationName
+
         const stats = await this.transport?.getStats()
         for (const key in stats) {
             const value = stats[key]
 
             this.statsData.transport[key] = value
+        }
+        
+        if (stats["webrtcLocalProtocol"]) {
+            this.statsData.underlyingProtocol = stats["webrtcLocalProtocol"] as string;
+        } else if (this.transport.implementationName === "websocket") {
+            this.statsData.underlyingProtocol = "tcp";
+        } else {
+            this.statsData.underlyingProtocol = null;
         }
     }
     private async updateVideoStats() {

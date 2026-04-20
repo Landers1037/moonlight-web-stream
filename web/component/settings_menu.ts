@@ -34,10 +34,12 @@ export type Settings = {
     pageStyle: PageStyle
     hdr: boolean
     useSelectElementPolyfill: boolean
+    coordinateOffset: CoordinateOffset
 }
 
 export type StreamCodec = "h264" | "auto" | "h265" | "av1"
 export type TransportType = "auto" | "webrtc" | "websocket"
+export type CoordinateOffset = "stream" | "video"
 
 import DEFAULT_SETTINGS from "../default_settings.js"
 import { StreamPermissions } from "../api_bindings.js";
@@ -165,6 +167,7 @@ export class StreamSettingsComponent implements Component {
     private videoSizeHeight: InputComponent
 
     private videoSampleQueueSize: InputComponent
+    private coordinateOffset: SelectComponent
 
     private audioHeader: HTMLHeadingElement = document.createElement("h3")
     private playAudioLocal: InputComponent
@@ -351,6 +354,17 @@ export class StreamSettingsComponent implements Component {
             this.hdr.setChecked(false)
             this.hdr.setEnabled(false)
         }
+
+        // Coordinate Offset
+        this.coordinateOffset = new SelectComponent("coordinateOffset", [
+            { value: "stream", name: i.coordinateOffsetStream },
+            { value: "video", name: i.coordinateOffsetVideo },
+        ], {
+            displayName: i.coordinateOffset,
+            preSelectedOption: settings?.coordinateOffset ?? defaultSettings_.coordinateOffset
+        })
+        this.coordinateOffset.addChangeListener(this.onSettingsChange.bind(this))
+        this.coordinateOffset.mount(this.divElement)
 
         // Audio local
         this.audioHeader.innerText = i.audio
@@ -599,6 +613,7 @@ export class StreamSettingsComponent implements Component {
         settings.hdr = this.hdr.isChecked()
 
         settings.useSelectElementPolyfill = this.useSelectElementPolyfill.isChecked()
+        settings.coordinateOffset = this.coordinateOffset.getValue() as CoordinateOffset
 
         makeSettingsValid(this.permissions, settings)
 

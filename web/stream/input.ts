@@ -10,7 +10,7 @@ const TOUCH_HIGH_RES_SCROLL_MULTIPLIER = 10
 // Normal scrolling multiplier
 const TOUCH_SCROLL_MULTIPLIER = 1
 // Distance until a touch cannot be a click anymore
-const TOUCH_AS_CLICK_MAX_DISTANCE = 2
+const TOUCH_AS_CLICK_MAX_DISTANCE = 15
 // Time till it's registered as a click, else it might be scrolling
 const TOUCH_AS_CLICK_MIN_TIME_MS = 100
 // Everything greater than this is a right click
@@ -871,8 +871,8 @@ export class StreamInput {
     }
 
     private calcNormalizedPosition(clientX: number, clientY: number, rect: DOMRect): [number, number] | null {
-        const x = (clientX - rect.left) / rect.width
-        const y = (clientY - rect.top) / rect.height
+        const x = (clientX - (rect.x ?? rect.left)) / rect.width
+        const y = (clientY - (rect.y ?? rect.top)) / rect.height
 
         if (x < 0 || x > 1.0 || y < 0 || y > 1.0) {
             // invalid touch

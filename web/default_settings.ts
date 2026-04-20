@@ -46,7 +46,9 @@ const trueDefaultSettings: Settings =
     // possible values: "standard", "old"
     "pageStyle": "standard",
     "hdr": false,
-    "useSelectElementPolyfill": false
+    "useSelectElementPolyfill": false,
+    // possible values: "stream", "video"
+    "coordinateOffset": "stream"
 }
 
 export default trueDefaultSettings as Settings
