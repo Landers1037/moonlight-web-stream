@@ -240,8 +240,18 @@
   .sidebar-overlay.sidebar-edge-right { @apply top-1/2 right-0; }
   .sidebar-edge-right .sidebar-background { @apply flex-row translate-x-[calc(100%-48px)] -translate-y-1/2; }
   
+  .sidebar-overlay.sidebar-edge-up { @apply top-0 left-1/2; }
+  .sidebar-edge-up .sidebar-background { @apply flex-col-reverse -translate-y-[calc(100%-48px)] -translate-x-1/2; }
+
+  .sidebar-overlay.sidebar-edge-down { @apply bottom-0 left-1/2; }
+  .sidebar-edge-down .sidebar-background { @apply flex-col translate-y-[calc(100%-48px)] -translate-x-1/2; }
+
   .sidebar-edge-left.sidebar-show .sidebar-background, .sidebar-edge-right.sidebar-show .sidebar-background {
     @apply translate-x-0 -translate-y-1/2;
+  }
+
+  .sidebar-edge-up.sidebar-show .sidebar-background, .sidebar-edge-down.sidebar-show .sidebar-background {
+    @apply translate-y-0 -translate-x-1/2;
   }
 
   .sidebar-button {
@@ -260,6 +270,8 @@
   /* When moonlight.svg is used, no need to rotate based on edge */
   .sidebar-edge-left .sidebar-button-image { @apply rotate-0; }
   .sidebar-edge-right .sidebar-button-image { @apply rotate-0; }
+  .sidebar-edge-up .sidebar-button-image { @apply rotate-0; }
+  .sidebar-edge-down .sidebar-button-image { @apply rotate-0; }
   .sidebar-show .sidebar-button-image { @apply scale-110; }
 
   .sidebar-content {

@@ -12,29 +12,36 @@ const sidebarParent = document.getElementById("sidebar-parent")
 const sidebarButton = document.getElementById("sidebar-button")
 
 let isDragging = false;
-let startY = 0;
-let startTop = 0;
+let startPos = 0;
+let startCoord = 0;
 
 sidebarButton?.addEventListener("pointerdown", (e) => {
     if (e.button !== 0 && e.pointerType === "mouse") return;
     
     isDragging = false;
-    startY = e.clientY;
+    
     if (!sidebarRoot) return;
     
+    const isHorizontalEdge = sidebarRoot.classList.contains("sidebar-edge-up") || sidebarRoot.classList.contains("sidebar-edge-down");
+    startPos = isHorizontalEdge ? e.clientX : e.clientY;
+
     const computedStyle = window.getComputedStyle(sidebarRoot);
-    startTop = parseFloat(computedStyle.top);
+    startCoord = parseFloat(isHorizontalEdge ? computedStyle.left : computedStyle.top);
     
     function onPointerMove(moveEvent: PointerEvent) {
-        const deltaY = moveEvent.clientY - startY;
-        if (Math.abs(deltaY) > 5) {
+        const delta = (isHorizontalEdge ? moveEvent.clientX : moveEvent.clientY) - startPos;
+        if (Math.abs(delta) > 5) {
             isDragging = true;
             sidebarButton?.setPointerCapture(moveEvent.pointerId);
         }
         if (isDragging && sidebarRoot) {
-            const maxY = window.innerHeight;
-            const newTop = Math.max(0, Math.min(startTop + deltaY, maxY));
-            sidebarRoot.style.top = `${newTop}px`;
+            const maxCoord = isHorizontalEdge ? window.innerWidth : window.innerHeight;
+            const newCoord = Math.max(0, Math.min(startCoord + delta, maxCoord));
+            if (isHorizontalEdge) {
+                sidebarRoot.style.left = `${newCoord}px`;
+            } else {
+                sidebarRoot.style.top = `${newCoord}px`;
+            }
         }
     }
     
@@ -74,6 +81,13 @@ export type SidebarStyle = {
 export function setSidebarStyle(style: SidebarStyle) {
     // Default values
     const edge = style.edge ?? "left"
+
+    // Reset inline styles that might have been set by dragging
+    if (sidebarRoot) {
+        sidebarRoot.style.top = "";
+        sidebarRoot.style.left = "";
+        sidebarRoot.style.transform = "";
+    }
 
     // Set edge
     sidebarRoot?.classList.remove("sidebar-edge-left", "sidebar-edge-right", "sidebar-edge-up", "sidebar-edge-down")
