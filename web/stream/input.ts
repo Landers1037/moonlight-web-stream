@@ -867,17 +867,42 @@ export class StreamInput {
     }
 
     onTouchCancel(event: TouchEvent, rect: DOMRect) {
-        this.onTouchEnd(event, rect)
+        if (this.config.touchMode == "touch") {
+            for (const touch of event.changedTouches) {
+                this.sendTouch(2, touch, rect)
+            }
+        } else if (this.config.touchMode == "mouseRelative" || this.config.touchMode == "localCursor" || this.config.touchMode == "pointAndDrag") {
+            for (const touch of event.changedTouches) {
+                if (this.primaryTouch == touch.identifier) {
+                    const oldTouch = this.touchTracker.get(this.primaryTouch)
+                    this.primaryTouch = null
+                    
+                    if (oldTouch && oldTouch.mouseClicked != null) {
+                        this.sendMouseButton(false, oldTouch.mouseClicked)
+                        oldTouch.mouseClicked = null
+                    }
+                    this.nextTouchDoubleTap = false
+                }
+            }
+        }
+
+        for (const touch of event.changedTouches) {
+            this.touchTracker.delete(touch.identifier)
+        }
+
+        if (this.touchMouseAction == "scroll" && this.touchTracker.size < 2) {
+            this.touchMouseAction = "default"
+        }
     }
 
     private calcNormalizedPosition(clientX: number, clientY: number, rect: DOMRect): [number, number] | null {
-        const x = (clientX - (rect.x ?? rect.left)) / rect.width
-        const y = (clientY - (rect.y ?? rect.top)) / rect.height
+        let x = (clientX - (rect.x ?? rect.left)) / rect.width
+        let y = (clientY - (rect.y ?? rect.top)) / rect.height
 
-        if (x < 0 || x > 1.0 || y < 0 || y > 1.0) {
-            // invalid touch
-            return null
-        }
+        // 限制坐标在 0 到 1 之间，防止越界导致坐标失效被忽略
+        x = Math.max(0, Math.min(1.0, x))
+        y = Math.max(0, Math.min(1.0, y))
+
         return [x, y]
     }
     private sendTouch(type: number, touch: Touch, rect: DOMRect) {
