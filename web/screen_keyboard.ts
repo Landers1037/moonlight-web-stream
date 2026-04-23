@@ -12,6 +12,7 @@ export class ScreenKeyboard {
         this.fakeElement.classList.add("hiddeninput")
         this.fakeElement.type = "text"
         this.fakeElement.name = "keyboard"
+        this.fakeElement.enterKeyHint = "enter"
         this.fakeElement.autocomplete = "off"
         this.fakeElement.autocapitalize = "off"
         this.fakeElement.spellcheck = false
@@ -20,6 +21,8 @@ export class ScreenKeyboard {
         }
 
         this.fakeElement.addEventListener("input", this.onKeyInput.bind(this))
+        this.fakeElement.addEventListener("keydown", this.onKeyDown.bind(this))
+        this.fakeElement.addEventListener("keyup", this.onKeyUp.bind(this))
 
         document.addEventListener("click", this.hide.bind(this))
         this.fakeElement.addEventListener("blur", this.hide.bind(this))
@@ -60,6 +63,25 @@ export class ScreenKeyboard {
     }
 
     // -- Events
+    private onKeyDown(event: KeyboardEvent) {
+        event.stopPropagation()
+        if (event.key === "Enter" || event.keyCode === 13) {
+            event.preventDefault()
+            const keyDown = new KeyboardEvent("keydown", {
+                code: "Enter"
+            })
+            const keyUp = new KeyboardEvent("keyup", {
+                code: "Enter"
+            })
+            this.eventTarget.dispatchEvent(keyDown)
+            this.eventTarget.dispatchEvent(keyUp)
+        }
+    }
+
+    private onKeyUp(event: KeyboardEvent) {
+        event.stopPropagation()
+    }
+
     private onKeyInput(event: Event) {
         if (!(event instanceof InputEvent)) {
             return
@@ -68,12 +90,22 @@ export class ScreenKeyboard {
             return
         }
 
-        if ((event.inputType == "insertText" || event.inputType == "insertFromPaste") && event.data != null) {
+        if ((event.inputType == "insertText" || event.inputType == "insertFromPaste" || event.inputType == "insertCompositionText") && event.data != null) {
             const customEvent: TextEvent = new CustomEvent("ml-text", {
                 detail: { text: event.data }
             })
 
             this.eventTarget.dispatchEvent(customEvent)
+        } else if (event.inputType == "insertLineBreak") {
+            const keyDown = new KeyboardEvent("keydown", {
+                code: "Enter"
+            })
+            const keyUp = new KeyboardEvent("keyup", {
+                code: "Enter"
+            })
+
+            this.eventTarget.dispatchEvent(keyDown)
+            this.eventTarget.dispatchEvent(keyUp)
         } else if (event.inputType == "deleteContentBackward" || event.inputType == "deleteByCut") {
             const keyDown = new KeyboardEvent("keydown", {
                 code: "Backspace"
